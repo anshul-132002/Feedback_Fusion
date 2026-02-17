@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import syncUser from "@/lib/sync-user";
+import syncCurrentUser from "@/lib/sync-user";
 
 export async function POST(request: NextRequest) {
     try {
-        const dbUser = await syncUser();
+        const dbUser = await syncCurrentUser();
         if (!dbUser) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }

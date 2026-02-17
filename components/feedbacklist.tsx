@@ -55,18 +55,14 @@ export default function FeedbackList({
             toast.success(data.voted ? "Vote added!" : "Vote removed");
 
             // Update local state
-            setPosts(
-                posts?.map((post) => {
+            setPosts((prevPosts: any) =>
+                prevPosts.map((post: any) => {
                     if (post.id === postId) {
-                        const voteCount = post.votes.length;
                         return {
                             ...post,
                             votes: data.voted
                                 ? [...post.votes, { userId }]
                                 : post.votes.filter((v: any) => v.userId !== userId),
-                            _count: {
-                                votes: data.voted ? voteCount + 1 : voteCount - 1,
-                            },
                         };
                     }
                     return post;
@@ -81,7 +77,7 @@ export default function FeedbackList({
     };
     return (
         <div className="space-y-4">
-            {posts.map((post) => (
+            {posts?.map((post: any) => (
                 <Card
                     key={post.id}
                     className="hover:shadow-md transition-shadow border "
