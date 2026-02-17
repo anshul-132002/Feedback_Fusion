@@ -3,7 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(
+    request: NextRequest,
+    context: { params: Promise<{ id: string }> }
+) {
     try {
         const { userId } = await auth()
         if (!userId) {
@@ -19,7 +22,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
             return NextResponse.json({ error: "admin access required" }, { status: 403 })
         }
         const { status } = await request.json()
-        const { id: postId } = await params
+        const { id: postId } = await context.params
         const numericPostId = Number(postId)
         //validate status
         if (!STATUS_ORDER.includes(status)) {
