@@ -55,21 +55,18 @@ export default function FeedbackList({
             toast.success(data.voted ? "Vote added!" : "Vote removed");
 
             // Update local state
-            setPosts((prevPosts) =>
-                prevPosts.map((post) => {
+            setPosts(
+                posts?.map((post) => {
                     if (post.id === postId) {
+                        const voteCount = post.votes.length;
                         return {
                             ...post,
                             votes: data.voted
-                                ? [
-                                    ...post.votes,
-                                    {
-                                        id: Date.now(), // temporary id
-                                        userId: Number(userId), // make sure it's number
-                                        postId: postId,
-                                    },
-                                ]
-                                : post.votes.filter((v) => v.userId !== Number(userId)),
+                                ? [...post.votes, { id: 0, userId: parseInt(userId), postId } as any]
+                                : post.votes.filter((v) => String(v.userId) !== userId),
+                            _count: {
+                                votes: data.voted ? voteCount + 1 : voteCount - 1,
+                            },
                         };
                     }
                     return post;
@@ -84,7 +81,7 @@ export default function FeedbackList({
     };
     return (
         <div className="space-y-4">
-            {posts?.map((post: any) => (
+            {posts?.map((post) => (
                 <Card
                     key={post.id}
                     className="hover:shadow-md transition-shadow border "
@@ -150,7 +147,7 @@ export default function FeedbackList({
                                 className="gap-2"
                             >
                                 <ThumbsUp
-                                    className={`h-4 w-4 ${post.votes.some((v: any) => v.userId === userId)
+                                    className={`h-4 w-4 ${post.votes.some((v) => String(v.userId) === userId)
                                         ? "fill-current"
                                         : ""
                                         }`}
