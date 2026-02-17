@@ -55,14 +55,21 @@ export default function FeedbackList({
             toast.success(data.voted ? "Vote added!" : "Vote removed");
 
             // Update local state
-            setPosts((prevPosts: any) =>
-                prevPosts.map((post: any) => {
+            setPosts((prevPosts) =>
+                prevPosts.map((post) => {
                     if (post.id === postId) {
                         return {
                             ...post,
                             votes: data.voted
-                                ? [...post.votes, { userId }]
-                                : post.votes.filter((v: any) => v.userId !== userId),
+                                ? [
+                                    ...post.votes,
+                                    {
+                                        id: Date.now(), // temporary id
+                                        userId: Number(userId), // make sure it's number
+                                        postId: postId,
+                                    },
+                                ]
+                                : post.votes.filter((v) => v.userId !== Number(userId)),
                         };
                     }
                     return post;
