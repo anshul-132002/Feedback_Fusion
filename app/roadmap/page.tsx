@@ -31,8 +31,10 @@ export default async function RoadmapPage() {
         in_progress: posts.filter((post) => post.status === "in_progress"),
         completed: posts.filter((post) => post.status === "completed"),
     }
-    const totalVotes = posts.reduce((acc, post) => acc + post.votes.length, 0)
-    const averageVotes = posts.length > 0 ? totalVotes / posts.length : 0
+
+    const totalVotes = posts.reduce((acc, post) => acc + post.votes.length, 0);
+    const averageVotes =
+        posts.length > 0 ? Math.round(totalVotes / posts.length) : 0;
     const completePercentage = getStatusPercentage(posts, "completed")
     const plannedPercentage = getStatusPercentage(posts, "planned")
     const inProgressPercentage = getStatusPercentage(posts, "in_progress")
